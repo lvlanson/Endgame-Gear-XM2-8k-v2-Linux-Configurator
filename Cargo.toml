@@ -1,6 +1,7 @@
 [package]
-name = "egg_xm28kv2_"
+name = "egg_xm28kv2"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+rusb = "0.9.4"

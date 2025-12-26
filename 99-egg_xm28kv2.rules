@@ -1,0 +1,2 @@
+# Rules to grant all users acces to usb device
+SUBSYSTEM=="usb", ATTR{idVendor}=="3367", ATTR{idProduct}=="1980", MODE="0666"
