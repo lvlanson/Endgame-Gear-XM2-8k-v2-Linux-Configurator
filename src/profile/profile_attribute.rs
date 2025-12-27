@@ -70,3 +70,63 @@ impl ProfileAttributeHandler for SingleBinaryAttributeHandler {
         }
     }
 }
+
+pub struct DpiRangeHandler;
+impl ProfileAttributeHandler for DpiRangeHandler {
+    fn validate(&self, data: &Vec<u8>) -> bool {
+        let min: u16 = 10;
+        let max: u16 = 30_000;
+        let step: u16 = 10;
+        let left: u16 = (data[0] as u16) + (data[1] as u16) * ((16 as u32).pow(2) as u16);
+        let right: u16 = (data[2] as u16) + (data[3] as u16) * ((16 as u32).pow(2) as u16);
+        let left_valid: bool = left >= min && left <= max && left % step == 0;
+        let right_valid: bool = right >= min && right <= max && right % step == 0;
+
+        left_valid && right_valid
+    }
+    fn tostring(&self, data: &Vec<u8>) -> String {
+        let left: u16 = (data[0] as u16) + (data[1] as u16) * ((16 as u32).pow(2) as u16);
+        let right: u16 = (data[2] as u16) + (data[3] as u16) * ((16 as u32).pow(2) as u16);
+        format!("{left}dpi {right}dpi")
+    }
+}
+
+pub struct KailhButtonFilterHandler {
+    range: Range,
+    speed_mode: u8,
+    safe_mode: u8,
+}
+impl KailhButtonFilterHandler {
+    pub fn new() -> Self {
+        Self {
+            range: Range {
+                code_min: 0x00,
+                code_max: 0x19,
+                code_step: 0x01,
+                decode_min: 0.0,
+                decode_step: 1.0,
+                unit: "".into(),
+            },
+            safe_mode: 0xf0,
+            speed_mode: 0xf1,
+        }
+    }
+}
+impl ProfileAttributeHandler for KailhButtonFilterHandler {
+    fn validate(&self, data: &Vec<u8>) -> bool {
+        let in_range: bool = data[0] >= self.range.code_min && data[1] <= self.range.code_max;
+        in_range || data[0] == self.speed_mode || data[0] == self.safe_mode
+    }
+    fn tostring(&self, data: &Vec<u8>) -> String {
+        let in_range = data[0] >= self.range.code_min && data[0] <= self.range.code_max;
+        if in_range {
+            format!("{}", data[0])
+        } else if data[0] == self.speed_mode {
+            "GX Speed Mode".into()
+        } else if data[0] == self.safe_mode {
+            "GX Safe Mode".into()
+        } else {
+            "Invalid Value Found".into()
+        }
+    }
+}

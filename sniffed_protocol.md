@@ -46,7 +46,7 @@
 - wLength: 64
 
 ## Functions <-> Addresses
-Interface_Number: `0x03`
+Interface_Number: `0x01`
 wLength: 1041 bytes (ProfileLength) 
 ATTR <-> PROFILE_POS : RANGE
 - Polling Rate                  <-> 21:     [8, 4, 2, 1]  <=> [1000, 2000, 4000, 8000]
@@ -57,18 +57,16 @@ ATTR <-> PROFILE_POS : RANGE
 - Ripple Control                <-> 27:     [0x00 - 0x01] <=> {OFF - ON}
 - Motion Sync                   <-> 28:     [0x00 - 0x01] <=> {OFF - ON}
 - CPI Levels                    <-> 30:     [0x01 - 0x04] <=> [1-4]
-- CPI Prof 1 Left               <-> 52,53:  [0xa0 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
-- CPI Prof 1 Right              <-> 54,55:  [0xa0 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
-- CPI Prof 2 Left               <-> 57,58:  [0xa0 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
-- CPI Prof 2 Right              <-> 59,60:  [0xa0 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
-- CPI Prof 3 Left               <-> 62,63:  [0xa0 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
-- CPI Prof 3 Right              <-> 64,65:  [0xa0 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
-- CPI Prof 4 Left               <-> 67,68:  [0xa0 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
-- CPI Prof 4 Right              <-> 69,70:  [0xa0 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
-- Left Btn Multiclick Filter    <-> 77:     [0x00 - 0x19] <=> [0 - 25]    
-- LB MF SPDT                    <-> 77:     {0x00-0x19, 0xf1, 0xf0} <=> {OFF, GX Speed Mode, GX Safe Mode}
-- RB MF SPDT                    <-> 84:     {0x00-0x19, 0xf1, 0xf0} <=> {OFF, GX Speed Mode, GX Safe Mode}
-- Right Btn Multiclick Filter   <-> 84:     [0x00 - 0x19] <=> [0 - 25]
+- CPI Prof 1 Left               <-> 52,53:  [0x0a 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
+- CPI Prof 1 Right              <-> 54,55:  [0x0a 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
+- CPI Prof 2 Left               <-> 57,58:  [0x0a 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
+- CPI Prof 2 Right              <-> 59,60:  [0x0a 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
+- CPI Prof 3 Left               <-> 62,63:  [0x0a 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
+- CPI Prof 3 Right              <-> 64,65:  [0x0a 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
+- CPI Prof 4 Left               <-> 67,68:  [0x0a 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
+- CPI Prof 4 Right              <-> 69,70:  [0x0a 0x00 - 0x30 0x75] <=> [10 - 30000] (stepsize: 10)
+- LB MF SPDT                    <-> 77:     {0x00-0x19, 0xf1, 0xf0} <=> {[0-25], GX Speed Mode, GX Safe Mode}
+- RB MF SPDT                    <-> 84:     {0x00-0x19, 0xf1, 0xf0} <=> {[0-25], GX Speed Mode, GX Safe Mode}
 - Middle Btn Multiclick Filter  <-> 91:     [0x00 - 0x19] <=> [0 - 25]
 - Forward Btn Multiclick Filter <-> 98:     [0x00 - 0x19] <=> [0 - 25]
 - Back Btn Multiclick Filter    <-> 105:    [0x00 - 0x19] <=> [0 - 25]

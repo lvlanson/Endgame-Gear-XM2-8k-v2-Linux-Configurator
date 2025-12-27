@@ -6,17 +6,19 @@ use crate::profile::{
         SwitchAttributeHandler,
     },
     profile_attribute_args::{Range, Translation},
-    profile_fields::MouseProfile,
+    profile_fields::{MouseProfile, ProfileFieldName},
 };
 /// Profile object containing the profile buffer and
 /// added functionality such as:
 /// - init: creates empty profile (zero vec)
 ///
-/// * `profile_buf`:
+/// * `profile_buf`: holds the current profile readout, note [0] and [1] are read/write flags
+/// * `profile_fields`: holds the mouseprofile with all the logic
 pub struct Profile {
     pub profile_buf: [u8; Self::PROFILE_SIZE],
     pub profile_fields: MouseProfile,
 }
+
 impl Profile {
     const PROFILE_SIZE: usize = 1041;
 
@@ -28,7 +30,30 @@ impl Profile {
     }
 
     pub fn print_profile(&self) {
-        for (_, attribute) in self.profile_fields.hashmap().iter() {
+        use ProfileFieldName as PFN;
+        let printout = [
+            PFN::PollRate,
+            PFN::SlamclickFilter,
+            PFN::DisableLedOnLiftoff,
+            PFN::LiftoffDistance,
+            PFN::AngleSnapping,
+            PFN::RippleControl,
+            PFN::MotionSync,
+            PFN::CpiLevels,
+            PFN::CpiProf1,
+            PFN::CpiProf2,
+            PFN::CpiProf3,
+            PFN::CpiProf4,
+            PFN::LeftBtnMF,
+            PFN::RightBtnMF,
+            PFN::MidBtnMF,
+            PFN::ForwardBtnMF,
+            PFN::BackBtnMf,
+        ];
+        let field_map = self.profile_fields.hashmap();
+
+        for field in printout {
+            let attribute: &ProfileAttribute = field_map.get(&field).unwrap();
             let data: Vec<u8> = attribute
                 .addresses
                 .iter()

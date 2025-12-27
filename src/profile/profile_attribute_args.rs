@@ -1,3 +1,4 @@
+#[derive(Clone)]
 pub struct Range {
     pub decode_min: f32,
     pub decode_step: f32,
