@@ -50,12 +50,3 @@ impl Profile {
         println!("{:02X?}", self.profile_buf)
     }
 }
-
-#[derive(PartialEq, Eq, Hash, Debug)]
-enum ProfileFieldNames {
-    PollRate,
-    SlamclickFilter,
-    DisableLedOnLiftoff,
-    LiftoffDistance,
-    AngleSnapping,
-}
