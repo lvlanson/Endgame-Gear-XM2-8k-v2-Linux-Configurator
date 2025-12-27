@@ -4,6 +4,7 @@ pub struct Range {
     pub code_min: u8,
     pub code_step: u8,
     pub code_max: u8,
+    pub unit: String,
 }
 
 pub struct Translation {

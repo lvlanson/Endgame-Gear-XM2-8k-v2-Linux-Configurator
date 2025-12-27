@@ -5,5 +5,6 @@ use crate::profile::profile_base::Profile;
 
 fn main() {
     let handler = Handler::init();
-    handler.read_profile();
+    let profile = handler.read_profile().unwrap();
+    profile.print_profile();
 }

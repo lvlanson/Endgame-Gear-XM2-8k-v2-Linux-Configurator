@@ -1,5 +1,4 @@
 use crate::profile::profile_attribute_args::{Range, Translation};
-use crate::profile::profile_base::Profile;
 
 pub struct ProfileAttribute {
     pub name: String,
@@ -8,26 +7,20 @@ pub struct ProfileAttribute {
     pub has_datafield: bool,
     pub datafield_addresses: Option<Vec<u8>>,
     pub datafield_domain: Option<Vec<u8>>,
-    pub attribute_handler: AttributeHandler,
+    pub attribute_handler: Box<dyn ProfileAttributeHandler>,
 }
 
-pub enum AttributeHandler {
-    SwitchAttribute(SwitchAttribute),
-    SingleByteContinuousAttribute(SingleByteContinuousAttribute),
-    SingleBinaryAttributeHandler(SingleBinaryAttributeHandler),
-}
-
-trait ProfileAttributeHandler {
+pub trait ProfileAttributeHandler {
     fn validate(&self, data: &Vec<u8>) -> bool;
-    fn to_string(&self, data: &Vec<u8>) -> String;
+    fn tostring(&self, data: &Vec<u8>) -> String;
 }
 
-pub struct SwitchAttribute;
-impl ProfileAttributeHandler for SwitchAttribute {
+pub struct SwitchAttributeHandler;
+impl ProfileAttributeHandler for SwitchAttributeHandler {
     fn validate(&self, data: &Vec<u8>) -> bool {
         data[0] == 0 || data[0] == 1
     }
-    fn to_string(&self, data: &Vec<u8>) -> String {
+    fn tostring(&self, data: &Vec<u8>) -> String {
         match data[0] {
             0 => String::from("OFF"),
             1 => String::from("ON"),
@@ -51,9 +44,9 @@ impl ProfileAttributeHandler for SingleByteContinuousAttribute {
         let valid_val = (data[0] - self.range.code_min) % self.range.code_step == 0;
         at_least_min && at_most_max && valid_val
     }
-    fn to_string(&self, data: &Vec<u8>) -> String {
+    fn tostring(&self, data: &Vec<u8>) -> String {
         let val = (data[0] as f32) * self.range.decode_step + self.range.decode_min;
-        val.to_string()
+        format!("{}{}", val.to_string(), self.range.unit)
     }
 }
 
@@ -70,7 +63,7 @@ impl ProfileAttributeHandler for SingleBinaryAttributeHandler {
         // check if is power of 2 (n AND n-1)
         data[0] > 0 && (data[0] & (data[0] - 1) == 0)
     }
-    fn to_string(&self, data: &Vec<u8>) -> String {
+    fn tostring(&self, _data: &Vec<u8>) -> String {
         // let index = self.translation.code.iter().find(data[0]);
         // self.translation.decode[index]
         String::from("to do")
