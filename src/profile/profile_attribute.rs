@@ -6,7 +6,6 @@ pub struct ProfileAttribute {
     pub addresses: Vec<u8>,
     pub has_datafield: bool,
     pub datafield_addresses: Option<Vec<u8>>,
-    pub datafield_domain: Option<Vec<u8>>,
     pub attribute_handler: Box<dyn ProfileAttributeHandler>,
 }
 
@@ -45,7 +44,8 @@ impl ProfileAttributeHandler for SingleByteContinuousAttribute {
         at_least_min && at_most_max && valid_val
     }
     fn tostring(&self, data: &Vec<u8>) -> String {
-        let val = (data[0] as f32) * self.range.decode_step + self.range.decode_min;
+        let delta = self.range.decode_min - (self.range.code_min as f32);
+        let val = (data[0] as f32) * self.range.decode_step + delta;
         format!("{}{}", val.to_string(), self.range.unit)
     }
 }
@@ -63,9 +63,10 @@ impl ProfileAttributeHandler for SingleBinaryAttributeHandler {
         // check if is power of 2 (n AND n-1)
         data[0] > 0 && (data[0] & (data[0] - 1) == 0)
     }
-    fn tostring(&self, _data: &Vec<u8>) -> String {
-        // let index = self.translation.code.iter().find(data[0]);
-        // self.translation.decode[index]
-        String::from("to do")
+    fn tostring(&self, data: &Vec<u8>) -> String {
+        match self.translation.code.iter().position(|&x| x == data[0]) {
+            Some(index) => self.translation.decode[index].clone(),
+            None => "value is not meaningful".into(),
+        }
     }
 }
