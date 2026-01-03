@@ -1,3 +1,5 @@
+use std::fmt::{Error, Formatter};
+
 use crate::profile::profile_attribute_args::{Range, Translation};
 
 pub struct ProfileAttribute {
@@ -112,6 +114,7 @@ impl KailhButtonFilterHandler {
         }
     }
 }
+
 impl ProfileAttributeHandler for KailhButtonFilterHandler {
     fn validate(&self, data: &Vec<u8>) -> bool {
         let in_range: bool = data[0] >= self.range.code_min && data[1] <= self.range.code_max;

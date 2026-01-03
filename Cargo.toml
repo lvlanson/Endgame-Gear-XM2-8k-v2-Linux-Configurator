@@ -1,7 +1,13 @@
 [package]
 name = "egg_xm28kv2"
 version = "0.1.0"
+description = "Configuration Interface for the Endgame Gear XM2 8k v2 Mouse."
+authors = ["Thomas Davies"]
 edition = "2024"
 
 [dependencies]
+color-eyre = "0.6.5"
+crossterm = "0.29.0"
+ratatui = "0.30.0"
 rusb = "0.9.4"
+tui-checkbox = "0.4.1"

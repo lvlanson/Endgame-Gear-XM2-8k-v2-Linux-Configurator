@@ -17,42 +17,43 @@ use crate::profile::{
 pub struct Profile {
     pub profile_buf: [u8; Self::PROFILE_SIZE],
     pub profile_fields: MouseProfile,
+    pub ordered_fields: [usize; 17],
 }
 
 impl Profile {
     const PROFILE_SIZE: usize = 1041;
 
     pub fn init() -> Self {
+        use ProfileFieldName as PFN;
         Self {
             profile_buf: [20; Self::PROFILE_SIZE],
             profile_fields: MouseProfile::new(),
+            ordered_fields: [
+                PFN::POLLRATE,
+                PFN::SLAMCLICKFILTER,
+                PFN::DISABLELEDONLIFTOFF,
+                PFN::LIFTOFFDISTANCE,
+                PFN::ANGLESNAPPING,
+                PFN::RIPPLECONTROL,
+                PFN::MOTIONSYNC,
+                PFN::CPILEVELS,
+                PFN::CPIPROF1,
+                PFN::CPIPROF2,
+                PFN::CPIPROF3,
+                PFN::CPIPROF4,
+                PFN::LEFTBTNMF,
+                PFN::RIGHTBTNMF,
+                PFN::MIDBTNMF,
+                PFN::FORWARDBTNMF,
+                PFN::BACKBTNMF,
+            ],
         }
     }
 
     pub fn print_profile(&self) {
-        use ProfileFieldName as PFN;
-        let printout = [
-            PFN::PollRate,
-            PFN::SlamclickFilter,
-            PFN::DisableLedOnLiftoff,
-            PFN::LiftoffDistance,
-            PFN::AngleSnapping,
-            PFN::RippleControl,
-            PFN::MotionSync,
-            PFN::CpiLevels,
-            PFN::CpiProf1,
-            PFN::CpiProf2,
-            PFN::CpiProf3,
-            PFN::CpiProf4,
-            PFN::LeftBtnMF,
-            PFN::RightBtnMF,
-            PFN::MidBtnMF,
-            PFN::ForwardBtnMF,
-            PFN::BackBtnMf,
-        ];
         let field_map = self.profile_fields.hashmap();
 
-        for field in printout {
+        for field in &self.ordered_fields {
             let attribute: &ProfileAttribute = field_map.get(&field).unwrap();
             let data: Vec<u8> = attribute
                 .addresses
@@ -73,5 +74,9 @@ impl Profile {
 
     pub fn dump_hex(&self) {
         println!("{:02X?}", self.profile_buf)
+    }
+
+    pub fn option_description(&self, index: &usize) -> &String {
+        &self.profile_fields.hashmap()[index].description
     }
 }

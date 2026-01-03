@@ -33,44 +33,50 @@ impl GetHeader {
 /// object
 ///
 /// * `handle`: handle to the usb device
+#[derive(Debug)]
 pub struct Handler {
     handle: DeviceHandle<Context>,
 }
+
 impl Handler {
     const VID: u16 = 0x3367;
     const PID: u16 = 0x1980;
     const INTERFACE: u8 = 0x01;
     const PAYLOAD_LENGTH: usize = 64;
 
-    pub fn init() -> Self {
+    pub fn init() -> Result<Self, String> {
         //  creating USB device context
         let context: Context = Context::new().expect("failed to create context");
 
         // creating a device handle for usb device
         let device_handle: DeviceHandle<Context> = context
             .open_device_with_vid_pid(Self::VID, Self::PID)
-            .expect("failed to open device");
+            .ok_or_else(|| "failed to open device")?;
 
         // if kernel driver is active detach it
         if device_handle
             .kernel_driver_active(Self::INTERFACE)
-            .expect("failed to determine if kernel driver is active")
+            .map_err(|err| format!("failed to determine if kernel driver is active: {}", err))?
         {
             device_handle
                 .detach_kernel_driver(Self::INTERFACE)
-                .expect("failed to detach kernel driver");
+                .map_err(|err| format!("failed to detach kernel driver: {}", err))?;
         }
 
         // claim interface
-        if device_handle.claim_interface(Self::INTERFACE).is_err() {
-            device_handle
-                .detach_kernel_driver(Self::INTERFACE)
-                .expect("failed to detach kernel driver claiming device");
-            panic!("failed claiming device");
-        }
-        Self {
+        device_handle
+            .claim_interface(Self::INTERFACE)
+            .map_err(|err| {
+                device_handle
+                    .detach_kernel_driver(Self::INTERFACE)
+                    .map_err(|err| {
+                        format!("failed to detach kernel driver claiming device: {}", err)
+                    });
+                format!("failed claiming device: {}", err)
+            })?;
+        Ok(Self {
             handle: device_handle,
-        }
+        })
     }
     pub fn read_profile(&self) -> Result<Profile, String> {
         use GetHeader as GH;
@@ -102,7 +108,7 @@ impl Handler {
                 SH::WVALUE,
                 SH::WINDEX,
                 payload_handshake.as_mut_slice(),
-                Duration::new(1000, 0),
+                Duration::from_millis(1000),
             )
             .map_err(|e| format!("handshake failed: {e}"))?;
 
@@ -114,7 +120,7 @@ impl Handler {
                 GH::WVALUE,
                 GH::WINDEX,
                 payload_get.as_mut_slice(),
-                Duration::new(1000, 0),
+                Duration::from_millis(1000),
             )
             .map_err(|e| format!("reading handshake failed: {e}"))?;
 
@@ -131,7 +137,7 @@ impl Handler {
                 SH::WVALUE,
                 SH::WINDEX,
                 payload_read.as_mut_slice(),
-                Duration::new(1000, 0),
+                Duration::from_millis(1000),
             )
             .map_err(|e| format!("read request failed: {e}"))?;
 
@@ -143,9 +149,9 @@ impl Handler {
                 GetHeader::WVALUE,
                 GetHeader::WINDEX,
                 profile.profile_buf.as_mut_slice(),
-                Duration::new(1000, 0),
+                Duration::from_millis(1000),
             )
-            .expect("failed reading profile");
+            .map_err(|e| format!("failed reading profile: {e}"))?;
         // returning profile
         Ok(profile)
     }

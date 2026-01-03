@@ -3,24 +3,25 @@ use std::collections::HashMap;
 use crate::profile::{profile_attribute::{DpiRangeHandler, KailhButtonFilterHandler, ProfileAttribute, SingleBinaryAttributeHandler, SingleByteContinuousAttribute, SwitchAttributeHandler}, profile_attribute_args::{Range, Translation}, profile_base::Profile};
 
 #[derive(PartialEq, Eq, Hash, Debug)]
-pub enum ProfileFieldName {
-    PollRate,
-    SlamclickFilter,
-    DisableLedOnLiftoff,
-    LiftoffDistance,
-    AngleSnapping,
-    RippleControl,
-    MotionSync,
-    CpiLevels,
-    CpiProf1,
-    CpiProf2,
-    CpiProf3,
-    CpiProf4,
-    LeftBtnMF,
-    RightBtnMF,
-    MidBtnMF,
-    ForwardBtnMF,
-    BackBtnMf,
+pub struct ProfileFieldName;
+impl ProfileFieldName {
+    pub const POLLRATE: usize = 0;
+    pub const SLAMCLICKFILTER: usize = 1;
+    pub const DISABLELEDONLIFTOFF: usize = 2;
+    pub const LIFTOFFDISTANCE: usize = 3;
+    pub const ANGLESNAPPING: usize = 4;
+    pub const RIPPLECONTROL: usize = 5;
+    pub const MOTIONSYNC: usize = 6;
+    pub const CPILEVELS: usize = 7;
+    pub const CPIPROF1: usize = 8;
+    pub const CPIPROF2: usize = 9;
+    pub const CPIPROF3: usize = 10;
+    pub const CPIPROF4: usize = 11;
+    pub const LEFTBTNMF: usize = 12;
+    pub const RIGHTBTNMF: usize = 13;
+    pub const MIDBTNMF: usize = 14;
+    pub const FORWARDBTNMF: usize = 15;
+    pub const BACKBTNMF: usize = 16;
 }
 pub struct MouseProfile{
     pub poll_rate: ProfileAttribute,
@@ -56,8 +57,7 @@ impl MouseProfile{
             poll_rate:  ProfileAttribute {
                 name: "Polling Rate".into(),
                 description: 
-                    "Polling Rate is the frequency in which information is being exchanged between the computer and the mouse.\n
-                    Allowed values are [8, 4, 2, 1] and represent [100, 2000, 4000, 8000] Hz respectively.".into(),
+                    "Polling Rate is the frequency in which information is being exchanged between the computer and the mouse.\nAllowed values are [8, 4, 2, 1] and represent [100, 2000, 4000, 8000] Hz respectively.".into(),
                 addresses: vec![21],
                 has_datafield: false,
                 datafield_addresses: None,
@@ -221,26 +221,26 @@ impl MouseProfile{
 
         }
     }
-    pub fn hashmap(&self) -> HashMap<ProfileFieldName, &ProfileAttribute>{
+    pub fn hashmap(&self) -> HashMap<usize, &ProfileAttribute>{
         use ProfileFieldName as PFN;
         HashMap::from_iter([
-            (PFN::PollRate, &self.poll_rate),
-            (PFN::SlamclickFilter, &self.slamclick_filter),
-            (PFN::DisableLedOnLiftoff, &self.disable_led_on_liftoff),
-            (PFN::LiftoffDistance, &self.liftoff_distance),
-            (PFN::AngleSnapping, &self.angle_snapping),
-            (PFN::MotionSync, &self.motion_sync),
-            (PFN::RippleControl, &self.ripple_control),
-            (PFN::CpiLevels, &self.cpi_levels),
-            (PFN::CpiProf1, &self.cpi_prof1),
-            (PFN::CpiProf2, &self.cpi_prof2),
-            (PFN::CpiProf3, &self.cpi_prof3),
-            (PFN::CpiProf4, &self.cpi_prof4),
-            (PFN::LeftBtnMF, &self.left_btn_mouse_filter),
-            (PFN::RightBtnMF, &self.right_btn_mouse_filter),
-            (PFN::MidBtnMF, &self.mid_btn_mouse_filter),
-            (PFN::ForwardBtnMF, &self.forward_btn_mouse_filter),
-            (PFN::BackBtnMf, &self.back_btn_mouse_filter),
+            (PFN::POLLRATE, &self.poll_rate),
+            (PFN::SLAMCLICKFILTER, &self.slamclick_filter),
+            (PFN::DISABLELEDONLIFTOFF, &self.disable_led_on_liftoff),
+            (PFN::LIFTOFFDISTANCE, &self.liftoff_distance),
+            (PFN::ANGLESNAPPING, &self.angle_snapping),
+            (PFN::MOTIONSYNC, &self.motion_sync),
+            (PFN::RIPPLECONTROL, &self.ripple_control),
+            (PFN::CPILEVELS, &self.cpi_levels),
+            (PFN::CPIPROF1, &self.cpi_prof1),
+            (PFN::CPIPROF2, &self.cpi_prof2),
+            (PFN::CPIPROF3, &self.cpi_prof3),
+            (PFN::CPIPROF4, &self.cpi_prof4),
+            (PFN::LEFTBTNMF, &self.left_btn_mouse_filter),
+            (PFN::RIGHTBTNMF, &self.right_btn_mouse_filter),
+            (PFN::MIDBTNMF, &self.mid_btn_mouse_filter),
+            (PFN::FORWARDBTNMF, &self.forward_btn_mouse_filter),
+            (PFN::BACKBTNMF, &self.back_btn_mouse_filter),
         ])
     }
 }
